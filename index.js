@@ -1,11 +1,7 @@
 /* Problem statement: 
 
-Given a sorted integer array of length n, 
-create a balance Binary Search Tree(BST) 
-using the elements of the array
-
-A BST is balanced when the 
-height of left subtree and right subtree of root differ by at most 1
+Create a Binary Search Tree(BST) 
+using the elements of an array
 
 A BST always lines lesser values to the left of a root/node, 
 and higher values to the right
@@ -61,9 +57,11 @@ accepting root(mid point) as parameter
         right = null
 
 
-Will need a class for the tree
+Will need a class for the tree  
+    tree class should sort a given array with merge sort algo before proceeding
     tree class should have a buildTree method
         buildTree(array) should split the given array into
+        buildTree should run through array and remove duplicate items (e.g two 4s found.).
             leftArray, mid and rightArray
             leftArray, mid and Right array is made using recBuildBranch(array)
                 Establish base case
@@ -89,3 +87,96 @@ Will need a class for the tree
             this.root = finalTree
         return finalTree           
 */
+
+class Node {
+	constructor(data, left = null, right = null) {
+		this.data = data
+		this.left = left
+		this.right = right
+	}
+}
+
+class Tree {
+	constructor(array) {
+		this.array = array
+		// To clarify, a root is defined with the following:
+		// an array that has had it's duplicates removed [...new Set(array)]
+		// an array with no duplicates that has been sorted mergeSort(array)
+		// making a glorious nested operation to build the tree upon.
+		this.root = this.buildTree([...new Set(mergeSort(array))])
+	}
+
+	buildTree(array) {
+		console.log(`buildTree(array) received: ${array}`)
+		if (array.length < 1) return null
+
+		const mid = Math.floor(array.length / 2)
+		const root = new Node(array[mid])
+
+		root.left = this.buildTree(array.slice(0, mid))
+		root.right = this.buildTree(array.slice(mid + 1))
+
+		// return level 0 root node
+		return root
+	}
+}
+
+// Implementing mergeSort from previous endavours to help with sorting arrays.
+function mergeSort(array) {
+	// return array if it is only 1 value
+	if (array.length === 1) return array
+
+	// determine mid point index of array
+	const mid = Math.floor(array.length / 2)
+
+	// split array
+	let left = array.slice(0, mid)
+	let right = array.slice(mid, array.length)
+
+	left = mergeSort(left)
+	right = mergeSort(right)
+
+	return merge(left, right)
+}
+
+function merge(left, right) {
+	// Final sorted array to be returned
+	const merged = []
+
+	while (left.length > 0 && right.length > 0) {
+		if (left[0] < right[0]) {
+			merged.push(left[0])
+			left.shift()
+		} else {
+			merged.push(right[0])
+			right.shift()
+		}
+	}
+	while (right.length > 0) {
+		merged.push(right[0])
+		right.shift()
+	}
+	while (left.length > 0) {
+		merged.push(left[0])
+		left.shift()
+	}
+	return merged
+}
+const prettyPrint = (node, prefix = '', isLeft = true) => {
+	if (node === null) {
+		return
+	}
+	if (node.right !== null) {
+		prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false)
+	}
+	console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`)
+	if (node.left !== null) {
+		prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true)
+	}
+}
+
+let arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
+
+let tree = new Tree(arr)
+
+prettyPrint(tree.root)
