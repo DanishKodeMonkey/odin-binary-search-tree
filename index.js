@@ -138,6 +138,90 @@ class Tree {
 		return null // Node with value not found.
 	}
 
+	// method returning an array of values from the tree if no callback is given
+	// if a callback is given, the related callback will handle returning an array.
+	// traverse the tree in breadth-first level order
+	levelOrder(callback) {
+		// If no root, return
+		if (!this.root) return
+
+		let result = []
+		// initialise the queue starting with root.
+		const queue = [this.root]
+
+		// as long as there are values in the queue
+		while (queue.length) {
+			// Resolve the first value in the queue
+			const node = queue.shift()
+			// if a callback is provided
+			if (callback) {
+				// pass node and resolve through callback
+				callback(node, result)
+			} else {
+				// if no callback is provided, pass simply pass to array.
+				result.push(node.data)
+			}
+			// pass next values to queue
+			if (node.left) queue.push(node.left)
+			if (node.right) queue.push(node.right)
+		}
+		// continue this until no left or right values can be queued or passed.
+		// return final array
+		return result
+	}
+
+	// callback function for in-order traversal
+	inOrder(node = this.root, result = []) {
+		// base case, return result
+		if (!node) {
+			return result
+		}
+		// Traverse left subtree
+		function traverse(node, result) {
+			if (node) {
+				traverse(node.left, result)
+				result.push(node.data)
+				traverse(node.right, result)
+			}
+		}
+		traverse(node, result)
+		return result // Return the result array
+	}
+	// callback function for in-order traversal
+	preOrder(node = this.root, result = []) {
+		// base case, return result
+		if (!node) {
+			return result
+		}
+		// Traverse left subtree
+		function traverse(node, result) {
+			if (node) {
+				result.push(node.data)
+				traverse(node.left, result)
+				traverse(node.right, result)
+			}
+		}
+		traverse(node, result)
+		return result // Return the result array
+	}
+	// callback function for in-order traversal
+	postOrder(node = this.root, result = []) {
+		// base case, return result
+		if (!node) {
+			return result
+		}
+		// Traverse left subtree
+		function traverse(node, result) {
+			if (node) {
+				traverse(node.left, result)
+				traverse(node.right, result)
+				result.push(node.data)
+			}
+		}
+		traverse(node, result)
+		return result // Return the result array
+	}
+
 	// Method for inserting a value into an already built tree
 	insert(value) {
 		// Create a new node from value
@@ -305,3 +389,7 @@ tree.deleteItem(6969)
 prettyPrint(tree.root)
 
 console.log(tree.find(23))
+
+console.log(tree.levelOrder(tree.inOrder))
+console.log(tree.levelOrder(tree.preOrder))
+console.log(tree.levelOrder(tree.postOrder))
