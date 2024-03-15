@@ -119,6 +119,47 @@ class Tree {
 		// return level 0 root node
 		return root
 	}
+
+	// Method for inserting a value into an already built tree
+
+	insert(value) {
+		// Create a new node from value
+		const node = new Node(value)
+
+		// If tree is empty
+		if (this.root === null) {
+			this.root = node
+			return
+		}
+
+		// If tree is not empty
+		let currentNode = this.root
+		while (currentNode) {
+			// Check less than conditions ( left traversal )
+			if (value < currentNode.data) {
+				// if left is null, insert new node( leaf found )
+				if (!currentNode.left) {
+					currentNode.left = node
+					return
+				}
+				// if node is not null, continue traversing
+				currentNode = currentNode.left
+			} else if (value > currentNode.data) {
+				// Check bigger than conditions( right traversal)
+				if (!currentNode.right) {
+					// If no node is found, insert new node ( leaf found )
+					currentNode.right = node
+					return
+				}
+				// if not, move right
+				currentNode = currentNode.right
+			} else {
+				// if a given value is the same as a nodes, replace the value in the node
+				currentNode.data = node.data
+				return
+			}
+		}
+	}
 }
 
 // Implementing mergeSort from previous endavours to help with sorting arrays.
@@ -178,5 +219,9 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 let arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
 let tree = new Tree(arr)
+
+prettyPrint(tree.root)
+
+tree.insert(6969)
 
 prettyPrint(tree.root)
