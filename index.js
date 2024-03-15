@@ -241,6 +241,7 @@ class Tree {
 				// if left is null, insert new node( leaf found )
 				if (!currentNode.left) {
 					currentNode.left = node
+					this.reBalance()
 					return
 				}
 				// if node is not null, continue traversing
@@ -250,6 +251,7 @@ class Tree {
 				if (!currentNode.right) {
 					// If no node is found, insert new node ( leaf found )
 					currentNode.right = node
+					this.reBalance()
 					return
 				}
 				// if not, move right
@@ -257,6 +259,9 @@ class Tree {
 			} else {
 				// if a given value is the same as a nodes, replace the value in the node
 				currentNode.data = node.data
+				if (!this.isBalanced) {
+					this.reBalance()
+				}
 				return
 			}
 		}
@@ -300,6 +305,11 @@ class Tree {
 		} else {
 			return false
 		}
+	}
+	reBalance() {
+		const nodes = this.inOrder()
+		console.log('rebalancing ' + nodes)
+		this.root = this.buildTree(nodes)
 	}
 	// Method for deleting a given value from the tree
 	// accepts a value, and optionally a node(starting at root for recursive call)
@@ -348,6 +358,9 @@ class Tree {
             */
 			node.right = this.deleteItem(node.data, node.right)
 		}
+		if (!this.isBalanced()) {
+			this.reBalance()
+		}
 		// return the updated node.
 		return node
 	}
@@ -358,6 +371,7 @@ class Tree {
 			// traverse left
 			node = node.left
 		}
+
 		// return left-most node (minimum)
 		return node
 	}
@@ -448,5 +462,9 @@ tree.insert(7007)
 tree.insert(7008)
 tree.insert(7009)
 tree.insert(7010)
+prettyPrint(tree.root)
+console.log(tree.isBalanced())
+
+tree.deleteItem(7009)
 prettyPrint(tree.root)
 console.log(tree.isBalanced())
