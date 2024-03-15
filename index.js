@@ -105,7 +105,7 @@ class Tree {
 		// making a glorious nested operation to build the tree upon.
 		this.root = this.buildTree([...new Set(mergeSort(array))])
 	}
-
+	// Method for building a tree
 	buildTree(array) {
 		console.log(`buildTree(array) received: ${array}`)
 		if (array.length < 1) return null
@@ -159,6 +159,65 @@ class Tree {
 				return
 			}
 		}
+	}
+	// Method for deleting a given value from the tree
+	// accepts a value, and optionally a node(starting at root for recursive call)
+	deleteItem(value, node = this.root) {
+		// base case for recursive call
+		// if node is null, return the node. The value does not exist.
+		if (!node) {
+			return node
+		}
+
+		// Compare value with node, recursively.
+		// if value is less than node.data, traverse left.
+		if (value < node.data) {
+			node.left = this.deleteItem(value, node.left)
+			// if value is more than node.data, traverse right.
+		} else if (value > node.data) {
+			node.right = this.deleteItem(value, node.right)
+		} else {
+			//if none of the above cases match, then we have found the node to be deleted.
+
+			// Now to check for child nodes.
+			// If single child node, return said child.
+			// this effectly removes the node from the tree.
+			if (!node.left) {
+				return node.right
+			}
+			if (!node.right) {
+				return node.left
+			}
+			/* 
+            Ok I found some material that guided me a bit on this one, it was tough!!
+            but this is how I understood the process:
+
+			 if the node has two children, find the inorder sucessor
+			 inorder sucessor = smallest node in right subtree.
+                This is done using a helper function
+                        
+			 node.data is now set to the returned value, the inorder-sucessor.
+			 At this point the old node is deleted, and replaced with its inorder-successor. 
+             */
+			node.data = this.findMinValue(node.right).data
+			/*
+			 now, recursively delete the inorder sucessor, from the new nodes right tree
+			 to preserve the binary tree structure.
+            */
+			node.right = this.deleteItem(node.data, node.right)
+		}
+		// return the updated node.
+		return node
+	}
+	// helper function for finding the smallest node in a subtree
+	findMinValue(node) {
+		// while node.left is not null
+		while (node.left) {
+			// traverse left
+			node = node.left
+		}
+		// return left-most node (minimum)
+		return node
 	}
 }
 
@@ -219,9 +278,10 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 let arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
 let tree = new Tree(arr)
-
 prettyPrint(tree.root)
 
 tree.insert(6969)
+prettyPrint(tree.root)
 
+tree.deleteItem(6969)
 prettyPrint(tree.root)
