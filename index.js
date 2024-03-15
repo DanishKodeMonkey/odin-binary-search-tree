@@ -283,6 +283,24 @@ class Tree {
 		// adding 1 to the depth for each traversal
 		return this.depth(root.right, node) + 1
 	}
+	isBalanced(node = this.root) {
+		// base case, if node is null, return true.
+		if (!node) {
+			return true
+		}
+		// Determine the heights of both the left and right branches
+		const leftHeight = this.height(node.left)
+		const rightHeight = this.height(node.right)
+		// check if the absolute difference between leftHeight and rightHeight is <= 1
+		// if so, the tree is uneven.
+		if (Math.abs(leftHeight - rightHeight) <= 1) {
+			// if this check pass, then it's even. Check this recursively.
+			// if it fails at any time, then it's uneven.
+			return this.isBalanced(node.left) && this.isBalanced(node.right)
+		} else {
+			return false
+		}
+	}
 	// Method for deleting a given value from the tree
 	// accepts a value, and optionally a node(starting at root for recursive call)
 	deleteItem(value, node = this.root) {
@@ -418,8 +436,9 @@ console.log(tree.levelOrder(tree.postOrder))
 
 console.log(tree.height(tree.find(8)))
 console.log(tree.height(tree.find(6345)))
+console.log(tree.isBalanced())
 
-/* tree.insert(7001)
+tree.insert(7001)
 tree.insert(7002)
 tree.insert(7003)
 tree.insert(7004)
@@ -429,4 +448,5 @@ tree.insert(7007)
 tree.insert(7008)
 tree.insert(7009)
 tree.insert(7010)
-prettyPrint(tree.root) */
+prettyPrint(tree.root)
+console.log(tree.isBalanced())
