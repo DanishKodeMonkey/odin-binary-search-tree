@@ -269,14 +269,19 @@ class Tree {
 		let leftPath = this.height(node.left)
 		let rightPath = this.height(node.right)
 		return leftPath > rightPath ? leftPath + 1 : rightPath + 1
+	}
 
-		//
-		/* 		if (!node) return -1
-		// measure height of left and right traversal
-		let leftHeight = this.height(node.left)
-		let rightHeight = this.height(node.right)
-		// compare results, return longest.
-		return Math.max(leftHeight, rightHeight) + 1 */
+	// method returning depth of given node ( longest distance to root of tree )
+	depth(node, root = this.root) {
+		// If the value of root is the value of the node, then its the root.
+		if (root.value === node.value) return 0
+
+		// if the value of the node is less than the roots, traverse left
+		// add 1 to the depth for each recursion.
+		if (node.value < root.value) return this.depth(root.left, node) + 1
+		// otherwise, it's greater than root, and traverse right,
+		// adding 1 to the depth for each traversal
+		return this.depth(root.right, node) + 1
 	}
 	// Method for deleting a given value from the tree
 	// accepts a value, and optionally a node(starting at root for recursive call)
@@ -412,6 +417,7 @@ console.log(tree.levelOrder(tree.preOrder))
 console.log(tree.levelOrder(tree.postOrder))
 
 console.log(tree.height(tree.find(8)))
+console.log(tree.height(tree.find(6345)))
 
 /* tree.insert(7001)
 tree.insert(7002)
