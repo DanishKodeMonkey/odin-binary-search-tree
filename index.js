@@ -261,6 +261,23 @@ class Tree {
 			}
 		}
 	}
+	// Method returning the given nodes height.( longest distance from node to edge leaf in tree )
+	height(node) {
+		//base case
+		if (!node) return 0
+
+		let leftPath = this.height(node.left)
+		let rightPath = this.height(node.right)
+		return leftPath > rightPath ? leftPath + 1 : rightPath + 1
+
+		//
+		/* 		if (!node) return -1
+		// measure height of left and right traversal
+		let leftHeight = this.height(node.left)
+		let rightHeight = this.height(node.right)
+		// compare results, return longest.
+		return Math.max(leftHeight, rightHeight) + 1 */
+	}
 	// Method for deleting a given value from the tree
 	// accepts a value, and optionally a node(starting at root for recursive call)
 	deleteItem(value, node = this.root) {
@@ -393,3 +410,17 @@ console.log(tree.find(23))
 console.log(tree.levelOrder(tree.inOrder))
 console.log(tree.levelOrder(tree.preOrder))
 console.log(tree.levelOrder(tree.postOrder))
+
+console.log(tree.height(tree.find(8)))
+
+/* tree.insert(7001)
+tree.insert(7002)
+tree.insert(7003)
+tree.insert(7004)
+tree.insert(7005)
+tree.insert(7006)
+tree.insert(7007)
+tree.insert(7008)
+tree.insert(7009)
+tree.insert(7010)
+prettyPrint(tree.root) */
