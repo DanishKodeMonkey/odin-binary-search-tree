@@ -119,9 +119,26 @@ class Tree {
 		// return level 0 root node
 		return root
 	}
+	// Method returning the node with the given value
+	find(value) {
+		let node = this.root
+
+		// While node is not null(leaf reached)
+		while (node) {
+			// recursively search for matching node.data
+			if (value < node.data) {
+				node = node.left // traverse left
+			} else if (value > node.data) {
+				node = node.right // traverse right
+			} else {
+				// if not found, then node.data === value
+				return node
+			}
+		}
+		return null // Node with value not found.
+	}
 
 	// Method for inserting a value into an already built tree
-
 	insert(value) {
 		// Create a new node from value
 		const node = new Node(value)
@@ -181,13 +198,14 @@ class Tree {
 
 			// Now to check for child nodes.
 			// If single child node, return said child.
-			// this effectly removes the node from the tree.
+			// this effectively removes the node from the tree.
 			if (!node.left) {
 				return node.right
 			}
 			if (!node.right) {
 				return node.left
 			}
+
 			/* 
             Ok I found some material that guided me a bit on this one, it was tough!!
             but this is how I understood the process:
@@ -285,3 +303,5 @@ prettyPrint(tree.root)
 
 tree.deleteItem(6969)
 prettyPrint(tree.root)
+
+console.log(tree.find(23))
